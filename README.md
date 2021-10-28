@@ -4,10 +4,10 @@
 
 Following devices are supported: 
 
-Panel heaters - Generation 3 
-Convection heaters - Generation 3
-Oil heaters - Generation 3
-Wi-Fi Socket - Generation 3
+Panel heaters - Generation 3. 
+Convection heaters - Generation 3.
+Oil heaters - Generation 3.
+Wi-Fi Socket - Generation 3.
 
 Generation 3 devices expose HTTP server, with a defined REST API. Local HTTP server works both when the device is connected to an existing WiFi network (to a router) or when the device is configured as an Access Point. 
 In the first scenario, the device IP address can be found in the router clients list. 
