@@ -105,7 +105,7 @@ We provide a [Postman](https://www.getpostman.com/) collection with a set of req
 
 Here, we provide example Python scripts which can control the Millheat heater gen. 3 via the REST API:
 
-- [heaters/examples/python/basic_control.py](examples/python/basic_control.py) script queries the current control status to obtain current temperature and control signal (how much the heater is heating). Then it changes the set temperature every minute.
+- [Panel-Heaters-Generation-3/blob/master/examples/python/basic_control.py](examples/python/basic_control.py) script queries the current control status to obtain current temperature and control signal (how much the heater is heating). Then it changes the set temperature every minute.
 - [examples/python/temperature_control.py](examples/python/temperature_control.py) script queries the status of the status device and set and get the temperature in a given temperature type. Then it changes the set temperature every minute.
 - [examples/python/timers.py](examples/python/timers.py) script sets a few timers scheduled for the next few minutes,  and queries the status to confirm the proper behavior. Note that the script doesn't need to keep running to have the timers working - they are stored and executed inside the device.
 
