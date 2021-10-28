@@ -45,7 +45,7 @@ Each response will be returned the field <code>status</code> with one of the fol
 
 ## Resources
 
-We provide a [Postman](https://www.getpostman.com/) collection with a set of requests that introduce the basic concepts of the API.  The Postman collection and more information are available [here](https://github.com/millheat/Panel-Heaters-Generation-3/blob/master/postman_collection_heaters_gen_3.json). In the collection <code>{{heater_addresss}}</code> is the variable which determines the IP address of the device.   
+We provide a [Postman](https://www.getpostman.com/) collection with a set of requests that introduce the basic concepts of the API.  The Postman collection and more information are available [here](postman_collection_heaters_gen_3.json). In the collection <code>{{heater_addresss}}</code> is the variable which determines the IP address of the device.   
 
 ### Basic communication 
 
@@ -105,13 +105,13 @@ We provide a [Postman](https://www.getpostman.com/) collection with a set of req
 
 Here, we provide example Python scripts which can control the Millheat heater gen. 3 via the REST API:
 
-- [examples/python/basic_control.py](https://github.com/millheat/Panel-Heaters-Generation-3/blob/master/heaters/examples/python/basic_control.py) script queries the current control status to obtain current temperature and control signal (how much the heater is heating). Then it changes the set temperature every minute.
+- [examples/python/basic_control.py](heaters/examples/python/basic_control.py) script queries the current control status to obtain current temperature and control signal (how much the heater is heating). Then it changes the set temperature every minute.
 - [examples/python/temperature_control.py](heaters/examples/python/temperature_control.py) script queries the status of the status device and set and get the temperature in a given temperature type. Then it changes the set temperature every minute.
-- [examples/python/timers.py](Panel-Heaters-Generation-3/blob/master/heaters/examples/python/timers.py) script sets a few timers scheduled for the next few minutes,  and queries the status to confirm the proper behavior. Note that the script doesn't need to keep running to have the timers working - they are stored and executed inside the device.
+- [examples/python/timers.py](heaters/examples/python/timers.py) script sets a few timers scheduled for the next few minutes,  and queries the status to confirm the proper behavior. Note that the script doesn't need to keep running to have the timers working - they are stored and executed inside the device.
 
 We also provide a simple example to control the Millheat heater gen. 3 with a Bash script:
 
-- In [examples/bash/query_ambient_temperature.sh](https://github.com/millheat/Panel-Heaters-Generation-3/blob/master/heaters/examples/bash/query_ambient_temperature.sh) script the ambient temperature is returned every second.
+- In [examples/bash/query_ambient_temperature.sh](heaters/examples/bash/query_ambient_temperature.sh) script the ambient temperature is returned every second.
 
 ## <code>GET</code>/status
 
