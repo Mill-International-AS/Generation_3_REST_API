@@ -1,8 +1,15 @@
-# Millheat heater gen. 3 - local WiFi Control API - version 0x211028 (28.10.2021)
+# Mill Norway generation 3 devices - local WiFi Control API - version 0x211028 (28.10.2021)
 
 ## Overview
 
-Generation 3 heaters expose HTTP server, with a defined REST API. Local HTTP server works both when the device is connected to an existing WiFi network (to a router) or when the device is configured as an Access Point. 
+Following devices are supported: 
+
+Panel heaters - Generation 3 
+Convection heaters - Generation 3
+Oil heaters - Generation 3
+Wi-Fi Socket - Generation 3
+
+Generation 3 devices expose HTTP server, with a defined REST API. Local HTTP server works both when the device is connected to an existing WiFi network (to a router) or when the device is configured as an Access Point. 
 In the first scenario, the device IP address can be found in the router clients list. 
 In most cases, it is something like 192.168.1.105 or 10.0.0.95, depending on the local network configuration. 
 Once you have an IP address, you can just type it in a web browser (assuming your device is connected to the same WiFi network) to see the main page. It contains a summary of the heater status and reference to this document.
