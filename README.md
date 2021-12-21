@@ -1,4 +1,4 @@
-# Mill Norway generation 3 devices - local WiFi Control API - version 0x211028 (28.10.2021)
+# Mill Norway generation 3 devices - local WiFi Control API - version 0x211221 (21.12.2021)
 
 ## Overview
 
@@ -34,6 +34,7 @@ Each response will include a`result` (`result` will be an object for single-reco
    "name": "panel heater gen. 3",
    "version": "0x210927",
    "operation_key": "",
+   "mac_address": "XX:XX:XX:XX:XX:XX",
    "status": "ok"
 }
 ```
@@ -44,7 +45,7 @@ Each response will include a`result` (`result` will be an object for single-reco
 
 Each response will be returned the field <code>status</code> with one of the following description:
 
--  <code>ok</code> - the request was successful,
+- <code>ok</code> - the request was successful,
 - <code>Failed to parse message body</code> - the request body is incorrect or the parameters are invalid,
 - <code>Failed to execute the request</code> - there was a problem with the processing request, 
 - <code>Length of request body too long</code> - the length of the request body is to long, 
@@ -105,6 +106,12 @@ We provide a [Postman](https://www.getpostman.com/) collection with a set of req
 - [<code>POST</code>/ablecloud-message](#postablecloud-message)
 - [<code>GET</code>/scan-wifi](#getscan-wifi)
 - [<code>POST</code>/device-config](#postdevice-config)
+- [<code>GET</code>/hysterersis-parameters](#gethysteresis-parameters)
+- [<code>POST</code>/hysterersis-parameters](#posthysteresis-parameters)
+- [<code>GET</code>/limited-heating-power](#getlimited-heating-power)
+- [<code>POST</code>/limited-heating-power](#postlimited-heating-power)
+- [<code>GET</code>/controller-type](#getcontroller-type)
+- [<code>POST</code>/controller-type](#postcontroller-type)
 
 
 
@@ -131,6 +138,7 @@ Return a quick summary of the device information.
 | name          | string | the name of the device                                       |
 | version       | string | the API version number                                       |
 | operation_key | string | if there is some operation problem (like broken temperature sensor), it may be reported in this field |
+| mac_address   | string | device's MAC (Media Access Control) address                  |
 
 ### Example
 
@@ -157,6 +165,7 @@ Return a quick summary of the device information.
    "name": "panel heater gen. 3",
    "version": "0x210927",
    "operation_key": "",
+   "mac_address": "XX:XX:XX:XX:XX:XX",
    "status": "ok"
 }
 ```
@@ -171,7 +180,7 @@ Perform a soft-reset of the device (configuration).
 
 #### Request
 
-- Postman: 
+- Postman:
 
   ```html
   POST http://{{heater_address}}/soft-reset
@@ -1585,7 +1594,7 @@ Return PID parameters of the temperature PID controller.
 
 ## <code>POST</code>/pid-parameters
 
-Set PID parameters.
+Set PID parameters. Setting PID parameters will change current regulator type to PID. PID regulator works only with panel heater and storage heater.
 
 ### Body parameters
 
@@ -1979,6 +1988,209 @@ The heater has to be configured in the access mode (AP) mode. Then, you have to 
   }
   ```
 
+
+#### Response
+
+```json
+{
+   "status": "ok"
+}
+```
+
+## <code>GET</code>/hysteresis-parameters
+Get current hysteresis setting.
+
+### Returned parameters
+
+| Field                 | Type  | Description                                  |
+| --------------------- | ----- | -------------------------------------------- |
+| temp_hysteresis_upper | float | upper offset (set temp + this -> stop heat)  |
+| temp_hysteresis_lower | float | lower offset (set temp - this -> start heat) |
+
+### Example
+
+#### Request
+
+- Postman: 
+
+  ```html
+  GET http://192.168.4.x/hysteresis-parameters
+  ```
+
+  Request body: empty
+
+
+#### Response
+
+```json
+{
+    "temp_hysteresis_upper": 2,
+    "temp_hysteresis_lower": 1,
+    "regulator_type": "hysteresis",
+    "status": "ok"
+}
+```
+
+
+## <code>POST</code>/hysteresis-parameters
+Set hysteresis parameters. Setting hysteresis parameters will change current regulator type to hystersis.
+
+AFTER CHANGING HYSTERESIS PARAMETERS RESTART IS REQUIRED
+
+### Body parameters
+
+| Field                 | Type  | Description                                  |
+| --------------------- | ----- | -------------------------------------------- |
+| temp_hysteresis_upper | float | upper offset (set temp + this -> stop heat)  |
+| temp_hysteresis_lower | flaot | lower offset (set temp - this -> start heat) |
+
+### Example
+
+#### Request
+
+- Postman: 
+
+  ```html
+  POST http://{{heater_address}}/hysteresis-parameters
+  ```
+
+  Request body:
+
+  ```json
+  {
+    "temp_hysteresis_upper": 1,
+    "temp_hysteresis_lower": 1,
+  }
+  ```
+
+
+#### Response
+
+```json
+{
+   "status": "ok"
+}
+```
+
+
+## <code>GET</code>/limited-heating-power
+Get current maximum limited heating power (percentage of maximum power) (only Panel and Storage heater).
+
+### Returned values
+
+| Field | Type | Description |
+| - | - | - |
+| limited_heating_power | int | percentage of maximum power that heater can use. Value in range 10 - 100. |
+| status | str | "ok" or error message |
+
+### Example
+
+#### Request
+
+- Postman: 
+
+  ```html
+  GET http://{{heater_address}}/limited-heating-power
+  ```
+
+#### Response
+```json
+{
+    "limited_heating_power": 75,
+    "status": "ok"
+}
+```
+
+
+## <code>POST</code>/limited-heating-power
+Set current maximum limited heating power (percentage of maximum power) (only Panel and Storage heater).
+
+### Return Values
+
+| Field                 | Type  | Description                                  |
+| --------------------- | ----- | -------------------------------------------- |
+| limited_heating_power | int | percentage of maximum power that heater can use. Value in range 10 - 100. |
+
+### Example
+
+#### Request
+
+- Postman: 
+
+  ```html
+  POST http://{{heater_address}}/limited-heating-power
+  ```
+
+  Request body:
+
+  ```json
+  {
+    "limited_heating_power": 75,
+  }
+  ```
+
+#### Response
+
+```json
+{
+   "status": "ok"
+}
+```
+
+## <code>GET</code>/controller-type
+Get current current regulator controller type. Hysteresis controller is available for oil, convertor and socket heaters. Slow PID is available for panel and storage heaters.
+
+### Returned values
+
+| Field | Type | Description |
+| - | - | - |
+| regulator_type | str | type of current controller type ("pid" or "hysteresis_or_slow_pid") |
+| status | str | "ok" or error message |
+
+### Example
+
+#### Request
+
+- Postman: 
+
+  ```html
+  GET http://{{heater_address}}/controller-type
+  ```
+
+#### Response
+```json
+{
+    "regulator_type": "hysteresis_or_slow_pid",
+    "status": "ok"
+}
+```
+
+## <code>POST</code>/controller-type
+Set current current regulator controller type. Hysteresis controller is available for oil, convertor and socket heaters. Slow PID is available for panel and storage heaters.
+
+### Return Values
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| regulator_type | str | type of current controller type ("pid", "hysteresis_or_slow_pid" or "unknown" - no change) |
+
+### Example
+
+#### Request
+
+- Postman: 
+
+  ```html
+  POST http://{{heater_address}}/controller-type
+  ```
+
+  Request body:
+
+  ```json
+  {
+    "regulator_type": "unknown",
+  }
+  ```
 
 #### Response
 

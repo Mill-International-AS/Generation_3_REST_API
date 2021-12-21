@@ -1,7 +1,8 @@
+
 {
 	"info": {
-		"_postman_id": "9d281dfb-7a9c-44bb-b36c-ff45dc13dbf1",
-		"name": "Panel heater",
+		"_postman_id": "f2541b75-ccad-4c30-9c9e-dfe66e28a431",
+		"name": "Mill local API",
 		"description": "All requests from panel heater local API ",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -165,10 +166,10 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"value\": false}",
+					"raw": "{\n    \"value\": false\n}",
 					"options": {
 						"raw": {
-							"language": "javascript"
+							"language": "json"
 						}
 					}
 				},
@@ -1050,6 +1051,181 @@
 					],
 					"path": [
 						"additional-socket-mode"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "hysteresis parameters",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{heater_addres}}/hysteresis-parameters",
+					"host": [
+						"{{heater_addres}}"
+					],
+					"path": [
+						"hysteresis-parameters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "hysteresis parameters",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"temp_hysteresis_upper\": 1,\n    \"temp_hysteresis_lower\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{heater_addres}}/hysteresis-parameters",
+					"host": [
+						"{{heater_addres}}"
+					],
+					"path": [
+						"hysteresis-parameters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "limited heating power",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{heater_addres}}/limited-heating-power",
+					"host": [
+						"{{heater_addres}}"
+					],
+					"path": [
+						"limited-heating-power"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "limited heating power",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"limited_heating_power\": 75\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{heater_addres}}/limited-heating-power",
+					"host": [
+						"{{heater_addres}}"
+					],
+					"path": [
+						"limited-heating-power"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "rpm in auto mode",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"sensor_for_auto_mode\": \"tvoc\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{heater_addres}}/rpm-in-auto-mode",
+					"host": [
+						"{{heater_addres}}"
+					],
+					"path": [
+						"rpm-in-auto-mode"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sensor for auto mode",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{heater_addres}}/sensor-for-auto-mode",
+					"host": [
+						"{{heater_addres}}"
+					],
+					"path": [
+						"sensor-for-auto-mode"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "controller type",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"regulator_type\": \"unknown\",\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{heater_addres}}/controller-type",
+					"host": [
+						"{{heater_addres}}"
+					],
+					"path": [
+						"controller-type"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "controller type",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{heater_addres}}/controller-type",
+					"host": [
+						"{{heater_addres}}"
+					],
+					"path": [
+						"controller-type"
 					]
 				}
 			},
