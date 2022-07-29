@@ -1,7 +1,6 @@
-
 {
 	"info": {
-		"_postman_id": "f2541b75-ccad-4c30-9c9e-dfe66e28a431",
+		"_postman_id": "1629a453-5e2a-43ef-9b13-78ad94728172",
 		"name": "Mill local API",
 		"description": "All requests from panel heater local API ",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -186,6 +185,49 @@
 			"response": []
 		},
 		{
+			"name": "commercial lock customization",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{heater_addres}}/commercial-lock-customization",
+					"host": [
+						"{{heater_addres}}"
+					],
+					"path": [
+						"commercial-lock-customization"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "commercial lock customization",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"enabled\": false,\n    \"min_allowed_temp_in_commercial_lock\": 11.5,\n    \"max_allowed_temp_in_commercial_lock\": 30\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{heater_addres}}/commercial-lock-customization",
+					"host": [
+						"{{heater_addres}}"
+					],
+					"path": [
+						"commercial-lock-customization"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "child lock",
 			"request": {
 				"method": "GET",
@@ -317,17 +359,8 @@
 		{
 			"name": "non repeatable timers",
 			"request": {
-				"method": "POST",
+				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"non_repeatable_timers\": [\n{\"value_type\": \"Comfort\", \"time\": 12},\n{\"value_type\": \"Away\", \"time\": 30},\n{\"value_type\": \"Sleep\", \"time\": 50}\n]\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
 					"raw": "{{heater_addres}}/non-repeatable-timers",
 					"host": [
@@ -343,8 +376,17 @@
 		{
 			"name": "non repeatable timers",
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"non_repeatable_timers\": [\n{\"name\": \"Comfort\", \"timestamp\": 12},\n{\"name\": \"Away\", \"timestamp\": 30},\n{\"name\": \"Sleep\", \"timestamp\": 50}\n]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "{{heater_addres}}/non-repeatable-timers",
 					"host": [
@@ -381,7 +423,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"mode\": \"Control individually\"\n}",
+					"raw": "{\n    \"mode\": \"Independent device\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1143,46 +1185,17 @@
 			"response": []
 		},
 		{
-			"name": "rpm in auto mode",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"sensor_for_auto_mode\": \"tvoc\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{heater_addres}}/rpm-in-auto-mode",
-					"host": [
-						"{{heater_addres}}"
-					],
-					"path": [
-						"rpm-in-auto-mode"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "sensor for auto mode",
+			"name": "controller type",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{heater_addres}}/sensor-for-auto-mode",
+					"raw": "{{heater_addres}}/controller-type",
 					"host": [
 						"{{heater_addres}}"
 					],
 					"path": [
-						"sensor-for-auto-mode"
+						"controller-type"
 					]
 				}
 			},
@@ -1190,12 +1203,38 @@
 		},
 		{
 			"name": "controller type",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"regulator_type\": \"unknown\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{heater_addres}}/controller-type",
+					"host": [
+						"{{heater_addres}}"
+					],
+					"path": [
+						"controller-type"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "set custom name",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"regulator_type\": \"unknown\",\n}",
+					"raw": "{\n    \"device_name\": \"123456789012345678901234567890\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1203,33 +1242,75 @@
 					}
 				},
 				"url": {
-					"raw": "{{heater_addres}}/controller-type",
+					"raw": "{{heater_addres}}/set-custom-name",
 					"host": [
 						"{{heater_addres}}"
 					],
 					"path": [
-						"controller-type"
+						"set-custom-name"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "controller type",
+			"name": "decrease set temperature",
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{heater_addres}}/controller-type",
+					"raw": "{{heater_addres}}/decrease-set-temperature",
 					"host": [
 						"{{heater_addres}}"
 					],
 					"path": [
-						"controller-type"
+						"decrease-set-temperature"
 					]
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "increase set temperature",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{heater_addres}}/increase-set-temperature",
+					"host": [
+						"{{heater_addres}}"
+					],
+					"path": [
+						"increase-set-temperature"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "set api key",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"api_key\": \"adfafsd\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{heater_addres}}/set-api-key",
+					"host": [
+						"{{heater_addres}}"
+					],
+					"path": [
+						"set-api-key"
+					]
+				}
+			}
 		}
 	]
 }
