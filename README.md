@@ -1,4 +1,4 @@
-# Mill Norway generation 3 devices - local WiFi Control API - version 0x211221 (21.12.2021)
+# Millheat heater gen. 3 - local WiFi Control API - version 0x220727 (27.07.2022)
 
 ## Overview
 
@@ -9,7 +9,7 @@ Following devices are supported:
 - Oil heaters - Generation 3.
 - Wi-Fi Socket - Generation 3.
 
-Generation 3 devices expose HTTP server, with a defined REST API. Local HTTP server works both when the device is connected to an existing WiFi network (to a router) or when the device is configured as an Access Point. 
+Generation 3 heaters expose HTTP server, with a defined REST API. Local HTTP server works both when the device is connected to an existing WiFi network (to a router) or when the device is configured as an Access Point. 
 In the first scenario, the device IP address can be found in the router clients list. 
 In most cases, it is something like 192.168.1.105 or 10.0.0.95, depending on the local network configuration. 
 Once you have an IP address, you can just type it in a web browser (assuming your device is connected to the same WiFi network) to see the main page. It contains a summary of the heater status and reference to this document.
@@ -32,13 +32,13 @@ Each response will include a`result` (`result` will be an object for single-reco
 ```json
 {
    "name": "panel heater gen. 3",
+   "custom_name": "",
    "version": "0x210927",
    "operation_key": "",
    "mac_address": "XX:XX:XX:XX:XX:XX",
    "status": "ok"
 }
 ```
-
 
 
 ## HTTP Response Status
@@ -54,6 +54,10 @@ Each response will be returned the field <code>status</code> with one of the fol
 ## Resources
 
 We provide a [Postman](https://www.getpostman.com/) collection with a set of requests that introduce the basic concepts of the API.  The Postman collection and more information are available [here](postman_collection_heaters_gen_3.json). In the collection <code>{{heater_addresss}}</code> is the variable which determines the IP address of the device.   
+
+## Authentication
+After setting API key with [<code>POST</code>/set-api-key](#postset-api-key) every request on every endpoint would need to contain this key as header. This operation (settign API key) triggers product to restart to change HTTP server to HTTPS server. That server uses self-signed certificate which can generate some warning massages but will provide better security.
+Header's key must be "Authentication" and it's value should be API key.
 
 ### Basic communication 
 
@@ -112,6 +116,12 @@ We provide a [Postman](https://www.getpostman.com/) collection with a set of req
 - [<code>POST</code>/limited-heating-power](#postlimited-heating-power)
 - [<code>GET</code>/controller-type](#getcontroller-type)
 - [<code>POST</code>/controller-type](#postcontroller-type)
+- [<code>POST</code>/set-custom-name](#postset-custom-name)
+- [<code>POST</code>/increase-set-temperature](#postincrease-set-temperature)
+- [<code>POST</code>/decrease-set-temperature](#postdecrease-set-temperature)
+- [<code>POST</code>/set-api-key](#postset-api-key)
+- [<code>GET</code>/commercial-lock-customization](#getcommercial-lock-customization)
+- [<code>POST</code>/commercial-lock-customization](#postcommercial-lock-customization)
 
 
 
@@ -136,6 +146,7 @@ Return a quick summary of the device information.
 | Field         | Type   | Description                                                  |
 | ------------- | ------ | ------------------------------------------------------------ |
 | name          | string | the name of the device                                       |
+| custom_name   | string | the custom name of the device                                |
 | version       | string | the API version number                                       |
 | operation_key | string | if there is some operation problem (like broken temperature sensor), it may be reported in this field |
 | mac_address   | string | device's MAC (Media Access Control) address                  |
@@ -163,6 +174,7 @@ Return a quick summary of the device information.
 ```json
 {
    "name": "panel heater gen. 3",
+   "custom_name": "",
    "version": "0x210927",
    "operation_key": "",
    "mac_address": "XX:XX:XX:XX:XX:XX",
@@ -845,20 +857,20 @@ Return the non-repeatable timers.
 {
     "non_repeatable_timers": [
         {
-            "type_value": "Normal",
-            "time": 27245338
+            "name": "Normal",
+            "timestamp": 27245338
         },
         {
-            "type_value": "Off",
-            "time": 27245339
+            "name": "Off",
+            "timestamp": 27245339
         },
         {
-            "type_value": "Normal",
-            "time": 27245340
+            "name": "Normal",
+            "timestamp": 27245340
         },
         {
-            "type_value": "Off",
-            "time": 27245341
+            "name": "Off",
+            "timestamp": 27245341
         }
     ],
     "active": true,
@@ -899,16 +911,16 @@ Please refer to example script `examples/python/timers.py`
   {
   	"non_repeatable_timers": [
   		{
-              "value_type": "Off", 
-              "time": 12
+              "name": "Off", 
+              "timestamp": 12
           },
   		{
-              "value_type": "Away", 
-              "time": 30
+              "name": "Away", 
+              "timestamp": 30
           },
   		{
-              "value_type": "Sleep", "
-              time": 50
+              "name": "Sleep", "
+              timestamp": 50
           }
   	]
   }
@@ -1000,7 +1012,7 @@ Set the current temperature units used on the display.
 
 ## <code>GET</code>/set-temperature
 
-Return temperature of the specified temperature type. 
+Return temperature of the specified in body of the request temperature type. 
 In operation modes `Control individually` and `Independent device` one usally is interested in `Normal` temperature type.
 
 ### Returned parameters
@@ -1052,8 +1064,10 @@ In operation modes `Control individually` and `Independent device` one usally is
 
 ## <code>POST</code>/set-temperature
 
-Set temperature of the specified temperature type. 
+Set temperature of the specified temperature type. This endpoint doesn't put the device in specific mode, it just sets the temperature
+for chosen mode. One cannot send "Off" type using this endpoint as temperature for Off mode cannot be set (it is set to specified value by default). 
 If operation mode is `"Control individually"` or `"Independent device"` one is usually interested in `"Normal"` temperature type.
+
 
 ### Body parameters
 
@@ -1080,7 +1094,7 @@ If operation mode is `"Control individually"` or `"Independent device"` one is u
      "value": 30
   }
   ```
-
+  
 - Curl:
 
   ```html
@@ -1479,6 +1493,8 @@ Apart from changing value for some temperature type, in `"Independent device"` o
 
 ## <code>GET</code>/additional-socket-mode
 
+#### Only for socket heaters
+
 Return the additional socket mode.
 
 ### Returned parameters
@@ -1512,6 +1528,8 @@ Return the additional socket mode.
 
 
 ## <code>POST</code>/additional-socket-mode
+
+#### Only for socket heaters
 
 Set the additional socket mode.
 
@@ -1551,6 +1569,8 @@ Body parameters
 
 
 ## <code>GET</code>/pid-parameters
+
+#### Only for panel heaters
 
 Return PID parameters of the temperature PID controller.
 
@@ -1594,7 +1614,9 @@ Return PID parameters of the temperature PID controller.
 
 ## <code>POST</code>/pid-parameters
 
-Set PID parameters. Setting PID parameters will change current regulator type to PID. PID regulator works only with panel heater and storage heater.
+#### Only for panel heaters
+
+Set PID parameters. Setting PID parameters will change current regulator type to PID. PID regulator works only with panel heater.
 
 ### Body parameters
 
@@ -2076,6 +2098,8 @@ AFTER CHANGING HYSTERESIS PARAMETERS RESTART IS REQUIRED
 ## <code>GET</code>/limited-heating-power
 Get current maximum limited heating power (percentage of maximum power) (only Panel and Storage heater).
 
+#### Only for panel heaters
+
 ### Returned values
 
 | Field | Type | Description |
@@ -2103,9 +2127,12 @@ Get current maximum limited heating power (percentage of maximum power) (only Pa
 
 
 ## <code>POST</code>/limited-heating-power
+
+#### Only for panel heaters
+
 Set current maximum limited heating power (percentage of maximum power) (only Panel and Storage heater).
 
-### Return Values
+### Body parameters
 
 | Field                 | Type  | Description                                  |
 | --------------------- | ----- | -------------------------------------------- |
@@ -2168,7 +2195,7 @@ Get current current regulator controller type. Hysteresis controller is availabl
 ## <code>POST</code>/controller-type
 Set current current regulator controller type. Hysteresis controller is available for oil, convertor and socket heaters. Slow PID is available for panel and storage heaters.
 
-### Return Values
+### Body parameters
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
@@ -2199,6 +2226,205 @@ Set current current regulator controller type. Hysteresis controller is availabl
    "status": "ok"
 }
 ```
+
+## <code>POST</code>/set-custom-name
+Change your device's custom name.
+
+### Body parameters
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| device_name | str | new device custom name, it can have at most 32 characters |
+
+### Example
+
+#### Request
+
+- Postman: 
+
+  ```html
+  POST http://{{heater_address}}/set-custom-name
+  ```
+
+  Request body:
+
+  ```json
+  {
+    "device_name": "My new custom name",
+  }
+  ```
+
+#### Response
+
+```json
+{
+   "status": "ok"
+}
+```
+
+## <code>POST</code>/increase-set-temperature
+Increase set temperature by one 0.5\*C.
+
+### Body parameters
+
+None
+
+### Example
+
+#### Request
+
+- Postman: 
+
+  ```html
+  POST http://{{heater_address}}/increase-set-temperature
+  ```
+
+  Request body:
+
+  None
+
+#### Response
+
+```json
+{
+   "status": "ok"
+}
+```
+
+## <code>POST</code>/decrease-set-temperature
+Decrease set temperature by 0.5\*C.
+
+### Body parameters
+
+None
+
+### Example
+
+#### Request
+
+- Postman: 
+
+  ```html
+  POST http://{{heater_address}}/decrease-set-temperature
+  ```
+
+  Request body:
+
+  None
+
+#### Response
+
+```json
+{
+   "status": "ok"
+}
+```
+
+## <code>POST</code>/set-api-key
+Set API key to authenticate users. BE CAREFULL!!! To reset API key one need to perform factory reset.
+
+### Body parameters
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| api_key | str | new API key, enables authentication and HTTPS server, it can have at most 63 characters |
+
+### Example
+
+#### Request
+
+- Postman: 
+
+  ```html
+  POST http://{{heater_address}}/set-api-key
+  ```
+
+  Request body:
+
+  ```json
+  {
+    "api_key": "asdasd"
+  }
+  ```
+
+#### Response
+
+```json
+{
+   "status": "ok"
+}
+```
+
+## <code>GET</code>/commercial-lock-customization
+Get commercial lock with range of possible temperature to change.
+
+### Returned values
+
+| Field | Type | Description |
+| - | - | - |
+| enable | bool | sets commercial lock state |
+| min_allowed_temp_in_commercial_lock | float | minimal temperature that can be set while device has active commercial lock |
+| max_allowed_temp_in_commercial_lock | float | maximal temperature that can be set while device has active commercial lock |
+
+### Example
+
+#### Request
+
+- Postman: 
+
+  ```html
+  GET http://{{heater_address}}/commercial-lock-customization
+  ```
+
+#### Response
+```json
+{
+    "enabled": false,
+    "min_allowed_temp_in_commercial_lock": 11,
+    "max_allowed_temp_in_commercial_lock": 30,
+    "status": "ok"
+}
+```
+
+## <code>POST</code>/commercial-lock-customization
+Set commercial lock with range of possible temperature to change.
+
+### Body parameters
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| enable | bool | sets commercial lock state |
+| min_allowed_temp_in_commercial_lock | float | minimal temperature that can be set while device has active commercial lock |
+| max_allowed_temp_in_commercial_lock | float | maximal temperature that can be set while device has active commercial lock |
+### Example
+
+#### Request
+
+- Postman: 
+
+  ```html
+  POST http://{{heater_address}}/commercial-lock-customization
+  ```
+
+  Request body:
+
+  ```json
+  {
+      "enabled": false,
+      "min_allowed_temp_in_commercial_lock": 11,
+      "max_allowed_temp_in_commercial_lock": 30
+  }
+  ```
+
+#### Response
+
+```json
+{
+   "status": "ok"
+}
+```
+
+
 
 
 
@@ -2233,7 +2459,7 @@ The Heater may operate in four operation modes:
 
 | Value                  | Description                                                  |
 | ---------------------- | ------------------------------------------------------------ |
-| "Off"                  | all control disable                                          |
+| "Off"                  | the device is in off mode, it is not possible to send any comands to the device. The device doesn't follow neither weekly program nor it is in independent mode, nor in control individually                                          |
 | "Weekly program"       | follow the weekly program, changing temperature by display buttons changes the temperature of the current temperature mode |
 | "Independent device"   | follow the single set value, with timers enabled             |
 | "Control individually" | follow the single set value, but not use any timers or weekly program |
@@ -2243,7 +2469,7 @@ The Heater may operate in four operation modes:
 
 | Value     | Description                                                  |
 | --------- | ------------------------------------------------------------ |
-| "Off"     | do no heat at all. One cannot set temperature for this type  |
+| "Off"     | The temperature is set to default value of 0 (so that heater will not heat at all) that cannot be changed by the user. As one cannot set temperature for this type, it cannot be sent through set-temperature endpoint |
 | "Normal"  | a single value, used for operation modes "Independent device" and timers |
 | "Comfort" | Temperature defined for type Comfort                         |
 | "Sleep"   | Temperature defined for type Sleep            |
