@@ -56,7 +56,7 @@ Each response will be returned the field <code>status</code> with one of the fol
 We provide a [Postman](https://www.getpostman.com/) collection with a set of requests that introduce the basic concepts of the API.  The Postman collection and more information are available [here](postman_collection_heaters_gen_3.json). In the collection <code>{{heater_addresss}}</code> is the variable which determines the IP address of the device.   
 
 ## Authentication
-After setting API key with [<code>POST</code>/set-api-key](#postset-api-key) every request on every endpoint would need to contain this key as header. This operation (settign API key) triggers product to restart to change HTTP server to HTTPS server. That server uses self-signed certificate which can generate some warning massages but will provide better security.
+After setting API key with [<code>POST</code>/set-api-key](#postset-api-key) every request on every endpoint would need to contain this key as header. This operation (settign API key) triggers product to restart to change HTTP server to HTTPS server. That server uses self-signed certificate which can generate some warning messages but will provide better security.
 Header's key must be "Authentication" and it's value should be API key.
 
 ### Basic communication 
